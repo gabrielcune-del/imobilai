@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ImobilAI — Anunțuri imobiliare scrise în secunde</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1A6B3C;
+  --green2:#22873F;
+  --green-light:#E8F5EE;
+  --green-border:#B6DEC7;
+  --gold:#C9A84C;
+  --gold-light:#FBF4E3;
+  --white:#FFFFFF;
+  --bg:#F7FAF8;
+  --bg2:#EFF5F1;
+  --border:#D8E8DC;
+  --ink:#0F1F15;
+  --ink2:#2D4A37;
+  --ink3:#6B8A74;
+  --f:'Outfit',system-ui,sans-serif;
+  --fs:'Playfair Display',Georgia,serif;
+  --r:12px;
+  --r2:20px;
+  --shadow:0 2px 20px rgba(26,107,60,0.08);
+  --shadow2:0 8px 48px rgba(26,107,60,0.12);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--f);background:var(--white);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:200;
+  height:60px;padding:0 clamp(1.5rem,5vw,4rem);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,0.9);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.logo{font-family:var(--fs);font-size:20px;font-weight:600;color:var(--green);text-decoration:none}
+.logo span{color:var(--gold);font-style:italic}
+.nav-r{display:flex;align-items:center;gap:2rem}
+.nav-a{font-size:14px;color:var(--ink2);text-decoration:none;transition:color .15s}
+.nav-a:hover{color:var(--green)}
+.nav-btn{background:var(--green);color:#fff;border:none;padding:9px 20px;border-radius:980px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--f);transition:background .15s}
+.nav-btn:hover{background:var(--green2)}
+@media(max-width:600px){.nav-r .nav-a{display:none}}
+
+/* HERO */
+.hero{
+  max-width:1100px;margin:0 auto;
+  padding:clamp(64px,9vw,110px) clamp(1.5rem,4vw,3rem) clamp(48px,6vw,72px);
+  display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center
+}
+@media(max-width:820px){.hero{grid-template-columns:1fr;gap:2.5rem}}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--green-light);border:1px solid var(--green-border);
+  color:var(--green);font-size:12px;font-weight:600;
+  padding:5px 14px;border-radius:980px;margin-bottom:24px
+}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+h1{
+  font-family:var(--fs);font-size:clamp(38px,5vw,58px);
+  line-height:1.08;letter-spacing:-.5px;color:var(--ink);margin-bottom:18px;font-weight:600
+}
+h1 em{font-style:italic;color:var(--green);font-weight:400}
+.hero-p{font-size:17px;color:var(--ink2);line-height:1.72;margin-bottom:32px;font-weight:300;max-width:460px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.btn-p{background:var(--green);color:#fff;border:none;padding:14px 28px;border-radius:980px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--f);transition:all .15s;box-shadow:0 4px 20px rgba(26,107,60,0.25)}
+.btn-p:hover{background:var(--green2);transform:translateY(-1px)}
+.btn-g{background:transparent;color:var(--green);border:1.5px solid var(--green-border);padding:14px 22px;border-radius:980px;font-size:15px;cursor:pointer;font-family:var(--f);transition:all .15s}
+.btn-g:hover{border-color:var(--green);background:var(--green-light)}
+.hero-note{font-size:12px;color:var(--ink3);margin-top:14px}
+
+/* PREVIEW CARD */
+.preview{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow2)}
+.preview-bar{background:var(--bg);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:6px}
+.d{width:10px;height:10px;border-radius:50%}
+.dr{background:#FF5F57}.dy{background:#FEBC2E}.dg{background:#28C840}
+.preview-inner{padding:20px}
+.pv-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:8px}
+.pv-in{background:var(--bg);border-radius:9px;padding:10px 12px;font-size:12px;color:var(--ink2);line-height:1.5;margin-bottom:12px}
+.pv-div{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.pv-div::before,.pv-div::after{content:'';flex:1;height:1px;background:var(--border)}
+.pv-div span{font-size:11px;color:var(--ink3);white-space:nowrap}
+.pv-out{background:var(--green-light);border:1px solid var(--green-border);border-radius:9px;padding:14px;font-size:13px;line-height:1.7;color:var(--ink2);position:relative}
+.pv-badge{position:absolute;top:-9px;right:12px;background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:2px 10px;border-radius:980px}
+
+/* STATS */
+.stats{max-width:1100px;margin:0 auto;padding:0 clamp(1.5rem,4vw,3rem) 72px;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+@media(max-width:560px){.stats{grid-template-columns:1fr}}
+.stat{background:var(--white);padding:2rem;text-align:center}
+.stat-n{font-family:var(--fs);font-size:44px;color:var(--green);line-height:1;letter-spacing:-.5px}
+.stat-l{font-size:14px;color:var(--ink3);margin-top:6px}
+
+/* SECTION */
+.sec{max-width:1100px;margin:0 auto;padding:clamp(56px,8vw,88px) clamp(1.5rem,4vw,3rem)}
+.sec-kicker{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:10px}
+.sec-h{font-family:var(--fs);font-size:clamp(28px,4vw,42px);color:var(--ink);line-height:1.1;margin-bottom:14px;font-weight:600}
+.sec-h em{font-style:italic;font-weight:400;color:var(--green)}
+.sec-sub{font-size:16px;color:var(--ink2);max-width:500px;line-height:1.7;font-weight:300}
+
+/* STEPS */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:48px}
+@media(max-width:680px){.steps{grid-template-columns:1fr}}
+.step{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:2rem;position:relative;overflow:hidden}
+.step-bg{position:absolute;bottom:-10px;right:14px;font-family:var(--fs);font-size:72px;color:var(--border);line-height:1;pointer-events:none;font-style:italic}
+.step-ico{width:44px;height:44px;border-radius:12px;background:var(--green-light);border:1px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px}
+.step-t{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:7px}
+.step-d{font-size:14px;color:var(--ink2);line-height:1.65;position:relative;z-index:1;font-weight:300}
+
+/* FEATURES */
+.feat-bg{background:var(--green);border-top:1px solid var(--green2)}
+.feat-inner{max-width:1100px;margin:0 auto;padding:clamp(56px,8vw,88px) clamp(1.5rem,4vw,3rem)}
+.feat-inner .sec-kicker{color:var(--gold)}
+.feat-inner .sec-h{color:#fff}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.15);border-radius:var(--r2);overflow:hidden;margin-top:48px}
+@media(max-width:620px){.feat-grid{grid-template-columns:1fr}}
+.feat{background:rgba(255,255,255,0.06);padding:2rem}
+.feat-ico{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px}
+.feat-t{font-size:15px;font-weight:600;color:#fff;margin-bottom:6px}
+.feat-d{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.65;font-weight:300}
+
+/* TOOL */
+.tool-sec{max-width:1100px;margin:0 auto;padding:clamp(56px,8vw,88px) clamp(1.5rem,4vw,3rem)}
+.tool-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow2)}
+.tool-head{background:var(--green);padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.tool-head h2{font-family:var(--fs);font-size:20px;font-weight:600;color:#fff;font-style:italic}
+.tool-head p{font-size:13px;color:rgba(255,255,255,0.7);margin-top:2px}
+.cnt{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:9px 16px;text-align:center}
+.cnt-n{font-family:var(--fs);font-size:22px;color:#fff;line-height:1}
+.cnt-l{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px}
+.tool-body{padding:2rem;background:var(--bg)}
+.tl-lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:10px}
+.prop-types{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.5rem}
+@media(max-width:500px){.prop-types{grid-template-columns:repeat(2,1fr)}}
+.pt{border:1.5px solid var(--border);border-radius:10px;padding:11px 8px;text-align:center;cursor:pointer;background:var(--white);font-family:var(--f);transition:all .15s}
+.pt:hover{border-color:var(--green);background:var(--green-light)}
+.pt.on{border-color:var(--green);background:var(--green-light)}
+.pt-ico{font-size:20px;display:block;margin-bottom:4px}
+.pt-lbl{font-size:12px;font-weight:500;color:var(--ink2)}
+.pt.on .pt-lbl{color:var(--green)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+.f{margin-bottom:1rem}
+.f label{display:block;font-size:13px;font-weight:500;color:var(--ink2);margin-bottom:7px}
+.f input,.f textarea,.f select{width:100%;font-family:var(--f);font-size:14px;border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--ink);background:var(--white);transition:border-color .15s;font-weight:300}
+.f textarea{min-height:80px;resize:vertical}
+.f input:focus,.f textarea:focus,.f select:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(26,107,60,.08)}
+.f select option{background:white}
+.gen-btn{width:100%;padding:15px;font-size:16px;font-weight:600;border:none;border-radius:980px;cursor:pointer;font-family:var(--f);background:var(--green);color:#fff;transition:all .15s;box-shadow:0 4px 20px rgba(26,107,60,0.25)}
+.gen-btn:hover{background:var(--green2);transform:translateY(-1px)}
+.gen-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.out{margin-top:1.5rem;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;background:var(--white)}
+.out-head{background:var(--bg);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;justify-content:space-between;align-items:center}
+.out-head span{font-size:13px;color:var(--ink3)}
+.cp-btn{font-size:12px;font-weight:500;padding:5px 14px;border-radius:980px;background:var(--white);border:1px solid var(--border);color:var(--ink2);cursor:pointer;font-family:var(--f);transition:all .15s}
+.cp-btn:hover{border-color:var(--green);color:var(--green)}
+.out-body{padding:1.25rem;font-size:14px;line-height:1.8;color:var(--ink2);white-space:pre-wrap;min-height:80px;font-weight:300}
+.empty-msg{text-align:center;padding:2rem;color:var(--ink3);font-size:14px;font-style:italic}
+.lim{background:#FFF9EC;border:1px solid #FFD95C;border-radius:10px;padding:11px 16px;margin-top:12px;font-size:13px;color:#7A5A00;display:none;gap:8px;align-items:center}
+.lim a{color:var(--green);font-weight:500}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:8px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* PRICING */
+.pricing-bg{background:var(--bg2);border-top:1px solid var(--border)}
+.pricing-inner{max-width:1100px;margin:0 auto;padding:clamp(56px,8vw,88px) clamp(1.5rem,4vw,3rem)}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:48px}
+@media(max-width:580px){.plans{grid-template-columns:1fr}}
+.plan{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r2);padding:2.5rem 2rem;position:relative}
+.plan.hot{border-color:var(--green);box-shadow:0 0 0 1px var(--green),var(--shadow)}
+.plan-rib{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;font-size:11px;font-weight:700;padding:3px 14px;border-radius:980px;white-space:nowrap}
+.plan-tier{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:10px}
+.plan-price{font-family:var(--fs);font-size:52px;color:var(--ink);line-height:1;letter-spacing:-.5px}
+.plan-price sub{font-size:17px;color:var(--ink3);font-family:var(--f);font-weight:300;letter-spacing:0}
+.plan-desc{font-size:14px;color:var(--ink2);margin:10px 0 22px;line-height:1.6;font-weight:300}
+.plan-list{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:26px}
+.plan-list li{font-size:14px;color:var(--ink2);display:flex;align-items:flex-start;gap:9px;font-weight:300}
+.plan-list li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0}
+.plan-list li.no{color:var(--ink3)}
+.plan-list li.no::before{content:'—';color:var(--border)}
+.plan-b{width:100%;padding:13px;border-radius:980px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--f);border:none;transition:all .15s}
+.plan-b-free{background:var(--bg2);color:var(--ink);border:1.5px solid var(--border)}
+.plan-b-free:hover{border-color:var(--ink3)}
+.plan-b-paid{background:var(--green);color:#fff;box-shadow:0 4px 16px rgba(26,107,60,0.2)}
+.plan-b-paid:hover{background:var(--green2)}
+
+/* TESTI */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:48px}
+@media(max-width:680px){.testi-grid{grid-template-columns:1fr}}
+.tcard{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:1.75rem}
+.stars{color:var(--gold);font-size:13px;margin-bottom:12px;letter-spacing:1px}
+.tcard-q{font-family:var(--fs);font-style:italic;font-size:16px;color:var(--ink);line-height:1.6;margin-bottom:18px;font-weight:400}
+.tcard-foot{display:flex;align-items:center;gap:11px}
+.av{width:38px;height:38px;border-radius:50%;background:var(--green-light);border:1px solid var(--green-border);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+.av-n{font-size:13px;font-weight:600;color:var(--ink)}
+.av-r{font-size:12px;color:var(--ink3);margin-top:1px}
+
+/* FAQ */
+.faq-wrap{max-width:640px;margin:0 auto;padding:clamp(56px,8vw,88px) clamp(1.5rem,4vw,3rem)}
+.faq-wrap .sec-h{text-align:center;margin-bottom:8px}
+.faq-wrap .sec-sub{text-align:center;margin:0 auto 44px}
+.fq{border-bottom:1px solid var(--border);padding:18px 0}
+.fq-q{font-size:15px;font-weight:500;color:var(--ink);display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:12px;line-height:1.4}
+.fq-ic{width:24px;height:24px;border-radius:50%;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--ink3);flex-shrink:0;transition:transform .2s,background .15s}
+.fq.open .fq-ic{transform:rotate(45deg);background:var(--green-light);border-color:var(--green-border);color:var(--green)}
+.fq-a{font-size:14px;color:var(--ink2);line-height:1.7;margin-top:12px;display:none;font-weight:300;padding-right:2.5rem}
+.fq.open .fq-a{display:block}
+
+/* CTA */
+.cta-final{background:var(--green);padding:clamp(72px,10vw,110px) clamp(1.5rem,4vw,3rem);text-align:center}
+.cta-final h2{font-family:var(--fs);font-size:clamp(34px,5vw,54px);color:#fff;line-height:1.1;margin-bottom:14px;font-weight:600}
+.cta-final h2 em{font-style:italic;font-weight:400;color:var(--gold)}
+.cta-final p{font-size:16px;color:rgba(255,255,255,0.7);margin-bottom:36px;font-weight:300}
+.btn-final{background:var(--white);color:var(--green);border:none;padding:16px 38px;border-radius:980px;font-size:17px;font-weight:700;cursor:pointer;font-family:var(--f);transition:all .15s}
+.btn-final:hover{background:var(--gold-light);transform:translateY(-1px)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:22px clamp(1.5rem,4vw,3rem);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.f-logo{font-family:var(--fs);font-size:17px;font-weight:600;color:var(--green)}
+.f-logo span{color:var(--gold);font-style:italic}
+.f-links{display:flex;gap:1.5rem}
+.f-links a{font-size:13px;color:var(--ink3);text-decoration:none;transition:color .15s}
+.f-links a:hover{color:var(--ink)}
+.f-copy{font-size:12px;color:var(--ink3)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">Imobil<span>AI</span></a>
+  <div class="nav-r">
+    <a href="#cum-functioneaza" class="nav-a">Cum funcționează</a>
+    <a href="#preturi" class="nav-a">Prețuri</a>
+    <button class="nav-btn" onclick="document.getElementById('generator').scrollIntoView({behavior:'smooth'})">Încearcă gratuit</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-badge">🏠 Primul generator AI pentru imobiliare din România</div>
+    <h1>Anunțuri imobiliare<br>scrise <em>instant.</em></h1>
+    <p class="hero-p">ImobilAI scrie anunțuri profesioniste pentru proprietățile tale — apartamente, case, terenuri, spații comerciale — în câteva secunde, gata de postat pe imobiliare.ro și OLX.</p>
+    <div class="hero-btns">
+      <button class="btn-p" onclick="document.getElementById('generator').scrollIntoView({behavior:'smooth'})">Generează gratuit →</button>
+      <button class="btn-g" onclick="document.getElementById('preturi').scrollIntoView({behavior:'smooth'})">Vezi prețurile</button>
+    </div>
+    <p class="hero-note">5 anunțuri gratuite pe zi &nbsp;·&nbsp; Fără cont &nbsp;·&nbsp; Fără card bancar</p>
+  </div>
+  <div>
+    <div class="preview">
+      <div class="preview-bar">
+        <div class="d dr"></div><div class="d dy"></div><div class="d dg"></div>
+      </div>
+      <div class="preview-inner">
+        <div class="pv-label">Detalii proprietate</div>
+        <div class="pv-in">Apartament 3 camere, 78mp, etaj 4/8, Floreasca București, renovat 2023, vedere parc, parcare subterană, 185.000€</div>
+        <div class="pv-div"><span>✨ generat în 4 secunde</span></div>
+        <div class="pv-out">
+          <div class="pv-badge">✓ Gata de postat</div>
+          <strong>🏠 Apartament 3 camere | Floreasca | Vedere parc</strong><br><br>
+          Apartament luminos, complet renovat în 2023, în una dintre cele mai căutate zone din București. Suprafață utilă de 78 mp, etaj 4 din 8, cu vedere directă spre parc.<br><br>
+          ✅ Bucătărie open-space modernă<br>
+          ✅ Parcare subterană inclusă<br>
+          ✅ Metrou la 5 minute<br><br>
+          <strong>Preț: 185.000€</strong> · Negociabil
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div style="max-width:1100px;margin:0 auto;padding:0 clamp(1.5rem,4vw,3rem) 72px">
+  <div class="stats">
+    <div class="stat"><div class="stat-n">8+</div><div class="stat-l">Tipuri de proprietăți</div></div>
+    <div class="stat"><div class="stat-n">&lt;5s</div><div class="stat-l">Timp mediu de generare</div></div>
+    <div class="stat"><div class="stat-n">29€</div><div class="stat-l">Cost lunar, anunțuri nelimitate</div></div>
+  </div>
+</div>
+
+<!-- HOW -->
+<section class="sec" id="cum-functioneaza">
+  <div class="sec-kicker">Cum funcționează</div>
+  <div class="sec-h">Trei pași.<br><em>Un anunț perfect.</em></div>
+  <div class="sec-sub">Nu trebuie să fii copywriter. Introduci detaliile proprietății și ImobilAI scrie un anunț profesionist în secunde.</div>
+  <div class="steps">
+    <div class="step"><div class="step-bg">01</div>
+      <div class="step-ico">🏠</div>
+      <div class="step-t">Alegi tipul proprietății</div>
+      <div class="step-d">Apartament, casă, teren, spațiu comercial, birou sau garsonieră — ImobilAI se adaptează la fiecare tip.</div>
+    </div>
+    <div class="step"><div class="step-bg">02</div>
+      <div class="step-ico">📋</div>
+      <div class="step-t">Introduci detaliile</div>
+      <div class="step-d">Suprafață, zonă, etaj, dotări, preț. Cu cât mai multe detalii, cu atât anunțul e mai convingător.</div>
+    </div>
+    <div class="step"><div class="step-bg">03</div>
+      <div class="step-ico">🚀</div>
+      <div class="step-t">Copiezi și postezi</div>
+      <div class="step-d">Anunțul apare în câteva secunde, optimizat pentru imobiliare.ro și OLX. Copiezi și postezi direct.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="feat-bg">
+  <div class="feat-inner">
+    <div class="sec-kicker">De ce ImobilAI</div>
+    <div class="sec-h" style="color:#fff">Tot ce îți trebuie<br><span style="font-style:italic;font-weight:400;color:rgba(255,255,255,0.75)">pentru mai multe vizionări.</span></div>
+    <div class="feat-grid">
+      <div class="feat"><div class="feat-ico">⚡</div><div class="feat-t">Rapid — sub 5 secunde</div><div class="feat-d">Nu mai petrece ore scriind același anunț de zeci de ori. ImobilAI generează în secunde, tu te ocupi de vânzări.</div></div>
+      <div class="feat"><div class="feat-ico">🎯</div><div class="feat-t">Optimizat pentru conversii</div><div class="feat-d">Anunțurile generate sunt structurate să atragă cumpărători — titlu captivant, beneficii clare, call-to-action eficient.</div></div>
+      <div class="feat"><div class="feat-ico">🏘️</div><div class="feat-t">Orice tip de proprietate</div><div class="feat-d">Apartamente, case, vile, terenuri, spații comerciale, birouri, garsoniere — ImobilAI știe cum să prezinte fiecare.</div></div>
+      <div class="feat"><div class="feat-ico">♾️</div><div class="feat-t">Nelimitat la Pro</div><div class="feat-d">Un agent imobiliar postează zeci de anunțuri pe lună. La 29€/lună, ImobilAI Pro se amortizează din prima vânzare.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- GENERATOR -->
+<section class="tool-sec" id="generator">
+  <div style="text-align:center;margin-bottom:2.5rem">
+    <div class="sec-kicker">Încearcă acum</div>
+    <div class="sec-h">Generează primul anunț gratuit</div>
+    <div class="sec-sub" style="margin:0 auto">Completează câmpurile și apasă butonul. Atât.</div>
+  </div>
+  <div class="tool-wrap">
+    <div class="tool-head">
+      <div>
+        <h2>ImobilAI Generator</h2>
+        <p>Completează detaliile proprietății</p>
+      </div>
+      <div class="cnt">
+        <div class="cnt-n" id="cntN">5</div>
+        <div class="cnt-l">anunțuri rămase azi</div>
+      </div>
+    </div>
+    <div class="tool-body">
+      <div class="tl-lbl">Tip proprietate</div>
+      <div class="prop-types">
+        <button class="pt on" onclick="setProp(this,'apartament')"><span class="pt-ico">🏢</span><span class="pt-lbl">Apartament</span></button>
+        <button class="pt" onclick="setProp(this,'casă')"><span class="pt-ico">🏡</span><span class="pt-lbl">Casă / Vilă</span></button>
+        <button class="pt" onclick="setProp(this,'garsonieră')"><span class="pt-ico">🚪</span><span class="pt-lbl">Garsonieră</span></button>
+        <button class="pt" onclick="setProp(this,'teren')"><span class="pt-ico">🌿</span><span class="pt-lbl">Teren</span></button>
+        <button class="pt" onclick="setProp(this,'spațiu comercial')"><span class="pt-ico">🏪</span><span class="pt-lbl">Spațiu comercial</span></button>
+        <button class="pt" onclick="setProp(this,'birou')"><span class="pt-ico">🏬</span><span class="pt-lbl">Birou</span></button>
+        <button class="pt" onclick="setProp(this,'depozit')"><span class="pt-ico">🏭</span><span class="pt-lbl">Depozit</span></button>
+        <button class="pt" onclick="setProp(this,'bloc de apartamente')"><span class="pt-ico">🏗️</span><span class="pt-lbl">Bloc / Imobil</span></button>
+      </div>
+
+      <div class="form-grid">
+        <div class="f">
+          <label>Suprafață (mp)</label>
+          <input type="text" id="suprafata" placeholder="ex: 78 mp">
+        </div>
+        <div class="f">
+          <label>Zonă / Oraș</label>
+          <input type="text" id="zona" placeholder="ex: Floreasca, București">
+        </div>
+        <div class="f">
+          <label>Preț</label>
+          <input type="text" id="pret" placeholder="ex: 185.000€">
+        </div>
+        <div class="f">
+          <label>Tip tranzacție</label>
+          <select id="tranzactie">
+            <option>Vânzare</option>
+            <option>Închiriere</option>
+            <option>Schimb</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="f">
+        <label>Detalii suplimentare (etaj, dotări, renovare, vedere etc.)</label>
+        <textarea id="detalii" placeholder="ex: Etaj 4/8, renovat 2023, vedere parc, parcare subterană, metrou la 5 min, AC, termopane..."></textarea>
+      </div>
+
+      <button class="gen-btn" id="genBtn" onclick="generate()">🏠 Generează anunț</button>
+      <div class="lim" id="limBar">⚠️ Ai atins limita zilnică. <a href="#preturi">Treci la Pro</a> pentru anunțuri nelimitate.</div>
+      <div class="out" id="outBox" style="display:none">
+        <div class="out-head">
+          <span id="outLbl">Rezultat</span>
+          <button class="cp-btn" onclick="copyTxt()">📋 Copiază</button>
+        </div>
+        <div class="out-body" id="outBody"><div class="empty-msg">Anunțul tău va apărea aici.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-bg" id="preturi">
+  <div class="pricing-inner">
+    <div style="text-align:center">
+      <div class="sec-kicker">Prețuri</div>
+      <div class="sec-h">Simplu și transparent</div>
+      <div class="sec-sub" style="margin:0 auto">Fără surprize. Fără costuri ascunse.</div>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <div class="plan-tier">Gratuit</div>
+        <div class="plan-price">0€ <sub>/ lună</sub></div>
+        <div class="plan-desc">Perfect pentru a testa ImobilAI fără niciun angajament.</div>
+        <ul class="plan-list">
+          <li>5 anunțuri gratuite pe zi</li>
+          <li>Toate tipurile de proprietăți</li>
+          <li>Română</li>
+          <li class="no">Anunțuri nelimitate</li>
+          <li class="no">Export Word / PDF</li>
+          <li class="no">Suport prioritar</li>
+        </ul>
+        <button class="plan-b plan-b-free" onclick="document.getElementById('generator').scrollIntoView({behavior:'smooth'})">Începe gratuit</button>
+      </div>
+      <div class="plan hot">
+        <div class="plan-rib">⭐ Cel mai ales</div>
+        <div class="plan-tier">Pro</div>
+        <div class="plan-price">29€ <sub>/ lună</sub></div>
+        <div class="plan-desc">Pentru agenți imobiliari și dezvoltatori care postează zilnic.</div>
+        <ul class="plan-list">
+          <li>Anunțuri complet nelimitate</li>
+          <li>Toate tipurile de proprietăți</li>
+          <li>Română și engleză</li>
+          <li>Export Word și PDF</li>
+          <li>Anunțuri optimizate SEO</li>
+          <li>Suport prioritar în 24h</li>
+        </ul>
+        <button class="plan-b plan-b-paid">Activează Pro — 29€/lună</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="sec">
+  <div class="sec-kicker">Ce spun clienții</div>
+  <div class="sec-h">Rezultate reale</div>
+  <div class="testi-grid">
+    <div class="tcard">
+      <div class="stars">★★★★★</div>
+      <div class="tcard-q">„Postez 20-30 de proprietăți pe săptămână. ImobilAI mi-a redus timpul de scriere cu 80%. Acum mă concentrez pe vânzări."</div>
+      <div class="tcard-foot"><div class="av">AM</div><div><div class="av-n">Alexandru M.</div><div class="av-r">Agent imobiliar, București</div></div></div>
+    </div>
+    <div class="tcard">
+      <div class="stars">★★★★★</div>
+      <div class="tcard-q">„Anunțurile generate sunt mult mai bune decât ce scriam eu. Mai multe vizionări, mai mulți clienți interesați."</div>
+      <div class="tcard-foot"><div class="av">RI</div><div><div class="av-n">Raluca I.</div><div class="av-r">Dezvoltator imobiliar, Cluj</div></div></div>
+    </div>
+    <div class="tcard">
+      <div class="stars">★★★★★</div>
+      <div class="tcard-q">„29€ pe lună e nimic față de comisionul dintr-o singură tranzacție. Cel mai bun tool pe care l-am cumpărat."</div>
+      <div class="tcard-foot"><div class="av">CP</div><div><div class="av-n">Cristian P.</div><div class="av-r">Agenție imobiliară, Timișoara</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-wrap">
+  <div class="sec-kicker" style="text-align:center">Întrebări frecvente</div>
+  <div class="sec-h">Ai întrebări?</div>
+  <div class="sec-sub">Avem răspunsuri clare.</div>
+  <div class="fq open">
+    <div class="fq-q" onclick="tFq(this)">Cum funcționează cele 5 anunțuri gratuite?<div class="fq-ic">+</div></div>
+    <div class="fq-a">Poți genera 5 anunțuri pe zi complet gratuit, fără card bancar. Limita se resetează automat la miezul nopții. Planul Pro oferă anunțuri nelimitate pentru 29€ pe lună.</div>
+  </div>
+  <div class="fq">
+    <div class="fq-q" onclick="tFq(this)">Anunțurile sunt optimizate pentru imobiliare.ro și OLX?<div class="fq-ic">+</div></div>
+    <div class="fq-a">Da. ImobilAI generează anunțuri structurate cu titlu captivant, descriere detaliată și call-to-action — format ideal pentru imobiliare.ro, OLX și orice altă platformă.</div>
+  </div>
+  <div class="fq">
+    <div class="fq-q" onclick="tFq(this)">Pot genera anunțuri și în engleză?<div class="fq-ic">+</div></div>
+    <div class="fq-a">Da, la planul Pro poți genera anunțuri în engleză — util pentru proprietăți de lux sau clienți internaționali.</div>
+  </div>
+  <div class="fq">
+    <div class="fq-q" onclick="tFq(this)">Pot anula abonamentul Pro oricând?<div class="fq-ic">+</div></div>
+    <div class="fq-a">Absolut. Anulezi cu un singur click, oricând dorești, fără penalități. Accesul Pro rămâne activ până la sfârșitul perioadei plătite.</div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-final">
+  <h2>Gata să vinzi mai repede<br>cu anunțuri <em>care conving?</em></h2>
+  <p>5 anunțuri gratuite azi. Fără card bancar.</p>
+  <button class="btn-final" onclick="document.getElementById('generator').scrollIntoView({behavior:'smooth'})">Încearcă ImobilAI gratuit →</button>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">Imobil<span>AI</span></div>
+  <div class="f-links">
+    <a href="#">Termeni</a>
+    <a href="#">Confidențialitate</a>
+    <a href="#">Contact</a>
+  </div>
+  <div class="f-copy">© 2025 ImobilAI.ro</div>
+</footer>
+
+<script>
+const MAX=5;
+let propType='apartament';
+let busy=false,txt='';
+
+function getC(){const d=new Date().toDateString();if(localStorage.getItem('iai_d')!==d){localStorage.setItem('iai_d',d);localStorage.setItem('iai_c','0')}return+(localStorage.getItem('iai_c')||0)}
+function addC(){localStorage.setItem('iai_c',getC()+1)}
+function upCnt(){document.getElementById('cntN').textContent=Math.max(0,MAX-getC())}
+upCnt();
+
+function setProp(btn,type){document.querySelectorAll('.pt').forEach(b=>b.classList.remove('on'));btn.classList.add('on');propType=type}
+
+async function generate(){
+  if(busy)return;upCnt();
+  if(getC()>=MAX){document.getElementById('limBar').style.display='flex';return}
+  const suprafata=document.getElementById('suprafata').value.trim();
+  const zona=document.getElementById('zona').value.trim();
+  const pret=document.getElementById('pret').value.trim();
+  const tranzactie=document.getElementById('tranzactie').value;
+  const detalii=document.getElementById('detalii').value.trim();
+  if(!zona&&!suprafata){document.getElementById('zona').focus();return}
+  
+  busy=true;
+  const btn=document.getElementById('genBtn');
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span>Se generează…';
+  const box=document.getElementById('outBox'),body=document.getElementById('outBody'),lbl=document.getElementById('outLbl');
+  box.style.display='block';body.innerHTML='<div class="empty-msg">Anunțul se scrie…</div>';lbl.textContent='Se generează…';
+  
+  const prompt=`Scrie un anunț imobiliar profesionist și convingător pentru ${tranzactie.toLowerCase()} unui ${propType}.
+Detalii: suprafață ${suprafata||'necunoscută'}, zona ${zona||'nespecificată'}, preț ${pret||'la cerere'}.
+${detalii?'Informații suplimentare: '+detalii:''}
+
+Anunțul trebuie să aibă:
+- Titlu captivant cu emoji relevant
+- Descriere de 3-4 rânduri care evidențiază beneficiile
+- Listă de dotări/avantaje principale cu ✅
+- Prețul clar menționat
+- Optimizat pentru imobiliare.ro și OLX`;
+
+  try{
+    const r=await fetch('/api/generate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({typePrompt:prompt,tone:'Profesionist',topic:`${propType} de ${tranzactie.toLowerCase()} în ${zona}`})
+    });
+    const d=await r.json();
+    txt=d.text||'Eroare. Încearcă din nou.';
+    body.textContent=txt;lbl.textContent='✓ Anunț generat';
+    addC();upCnt();
+    if(getC()>=MAX)document.getElementById('limBar').style.display='flex';
+  }catch(e){body.textContent='Eroare de conexiune. Încearcă din nou.'}
+  busy=false;btn.disabled=false;btn.innerHTML='🏠 Generează din nou';
+}
+
+function copyTxt(){
+  if(!txt)return;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const b=document.querySelector('.cp-btn');
+    b.textContent='✓ Copiat!';setTimeout(()=>b.textContent='📋 Copiază',1500)
+  })
+}
+
+function tFq(el){
+  const i=el.parentElement;
+  document.querySelectorAll('.fq.open').forEach(x=>{if(x!==i)x.classList.remove('open')});
+  i.classList.toggle('open')
+}
+</script>
+</body>
+</html>
